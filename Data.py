@@ -1,22 +1,19 @@
+import json
 class User:
-    
-    UserId = None
-    UserName = None
-    UserNickName = None
-    IntroduceText = None
-    UserProfileImgUrl = None
-    UserType = None
-    DescribeWriter = None
+
 
     def __init__(self,data):
-        self.UserId = data["userId"]
-        self.UserName = data["userName"]
-        self.UserNickName = data["userNickname"]
-        self.IntroduceText = data["introduceText"]
+        self.UserId = data["userid"]
+        self.UserName = data["username"]
+        self.UserNickName = data["nickname"]
+        self.IntroduceText = data["introducetext"]
         self.UserProfileImgUrl = data["img"]
-        self.UserType = data["type"]
-        self.DescribeWriter = data["descriveWriter"]
-    
+        self.UserType = data["usertype"]
+        self.DescribeWriter = data["describewriter"]
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+             indent=4)
 
 class Article:
 
@@ -30,6 +27,10 @@ class Article:
         self.TextTitle = data["text"]
         self.title = data["title"]
         self.Date = data["date"]
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+             indent=4)
     
 
 
