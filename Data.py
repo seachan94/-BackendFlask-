@@ -1,15 +1,14 @@
 import json
 class User:
 
-
     def __init__(self,data):
-        self.UserId = data["userid"]
-        self.UserName = data["username"]
-        self.UserNickName = data["nickname"]
-        self.IntroduceText = data["introducetext"]
-        self.UserProfileImgUrl = data["img"]
-        self.UserType = data["usertype"]
-        self.DescribeWriter = data["describewriter"]
+        self.id = data["userid"]
+        self.name = data["username"]
+        self.nickname = data["nickname"]
+        self.introduceText = data["introducetext"]
+        self.Img = data["img"]
+        self.userType = data["usertype"]
+        self.describeWriter = data["describewriter"]
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
@@ -17,20 +16,24 @@ class User:
 
 class Article:
 
-    WriterId = None
-    TextTitle = None
-    Text = None
-    Date = None
-    time= None
     def __init__(self,data):
-        self.WriterId = data["id"]
-        self.TextTitle = data["text"]
+        self.writerId = data["writerId"]
+        self.textTitle = data["text"]
         self.title = data["title"]
-        self.Date = data["date"]
+        self.date = data["date"]
+        self.time = data['time']
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
              indent=4)
     
+class WritersArticle:
 
+    def __init__(self,data):
+        self.Img = data['Img']
+        self.nickName = data['nickName']
+        self.article = data['article']
 
+    def toJSON(self):
+            return json.dumps(self, default=lambda o: o.__dict__, 
+                indent=4)
