@@ -8,14 +8,14 @@ class User:
     UserType = None
     DescribeWriter = None
 
-    def __init__(self,userid= None,username = None,usernickname = None,intro = None,img = None,type = None,writer = None):
-        self.UserId = userid
-        self.UserName = username
-        self.UserNickName = usernickname
-        self.IntroduceText = intro
-        self.UserProfileImgUrl = img
-        self.UserType = type
-        self.DescribeWriter = writer
+    def __init__(self,data):
+        self.UserId = data["userId"]
+        self.UserName = data["userName"]
+        self.UserNickName = data["userNickname"]
+        self.IntroduceText = data["introduceText"]
+        self.UserProfileImgUrl = data["img"]
+        self.UserType = data["type"]
+        self.DescribeWriter = data["descriveWriter"]
     
 
 class Article:
@@ -24,10 +24,12 @@ class Article:
     TextTitle = None
     Text = None
     Date = None
+    time= None
+    def __init__(self,data):
+        self.WriterId = data["id"]
+        self.TextTitle = data["text"]
+        self.title = data["title"]
+        self.Date = data["date"]
+    
 
-    def __init__(self,id= None,title = None,text = None,date = None):
-        self.WriterId = id
-        self.TextTitle = text
-        self.title = title
-        self.Date = date
 
