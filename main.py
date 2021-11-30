@@ -40,6 +40,23 @@ def get_user():
     return { "result" : "SUCCESS","data" : json.loads(CurrentUser.user.toJSON()) }
 
 
+@app.route('/user/duplicate/id', methods =['GET'])
+def checkIsDuplicateId():
+    
+    id = request.args.get("id")
+    isDuplicate = len(list(db.User.find({"userid":id}))) == 0
+
+    return str(isDuplicate)
+
+@app.route('/user/duplicate/nickname', methods =['GET'])
+def checkIsDuplicateNickName():
+    
+    nickname = request.args.get("nickname")
+    isDuplicate = len(list(db.User.find({"nickname":nickname}))) == 0
+
+    return str(isDuplicate)
+
+
 @app.route('/articles',methods = ['GET'])
 def get_articles():
     writers = CurrentUser.user.describeWriter
