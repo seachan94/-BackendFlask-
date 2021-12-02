@@ -44,7 +44,7 @@ def get_user():
 def checkIsDuplicateId():
     
     id = request.args.get("id")
-    isDuplicate = len(list(db.User.find({"userid":id}))) == 0
+    isDuplicate = len(list(db.User.find({"userid":id}))) != 0
 
     return str(isDuplicate)
 
@@ -52,7 +52,7 @@ def checkIsDuplicateId():
 def checkIsDuplicateNickName():
     
     nickname = request.args.get("nickname")
-    isDuplicate = len(list(db.User.find({"nickname":nickname}))) == 0
+    isDuplicate = len(list(db.User.find({"nickname":nickname}))) != 0
 
     return str(isDuplicate)
 
