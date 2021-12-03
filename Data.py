@@ -18,7 +18,7 @@ class Article:
 
     def __init__(self,data):
         self.writerId = data["writerId"]
-        self.textTitle = data["text"]
+        self.text = data["text"]
         self.title = data["title"]
         self.date = data["date"]
         self.time = data['time']

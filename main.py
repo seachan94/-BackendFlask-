@@ -59,11 +59,15 @@ def checkIsDuplicateNickName():
 
 @app.route('/articles',methods = ['GET'])
 def get_articles():
-    writers = CurrentUser.user.describeWriter
-
+    id = request.args.get("id")
+    datas = list(db.User.find({"userid":id}))[0]
+    writers = datas["describewriter"]
     get_article = []
-    
+
     for writer in writers:
+        writerInfoFromDb = list(db.User.find({"userid":writer}))
+        if len(writerInfoFromDb)== 0:
+            continue
         writerInfo = list(db.User.find({"userid":writer}))[0]
         writerArticle = list(db.Articles.find({"userid":writer}))
         for data in writerArticle:
@@ -77,22 +81,34 @@ def get_articles():
             dic = {}
             dic['Img'] = writerInfo["img"]
             dic['nickName'] = writerInfo["nickname"]
-            if 'article' in dic.keys():
-
-                dic['article'].append(json.loads(Data.Article(article_dic).toJSON()))
-            else:
-                dic['article'] = [json.loads(Data.Article(article_dic).toJSON())]
+           
+            dic['article'] = json.loads(Data.Article(article_dic).toJSON())
 
             combine_data = json.loads(Data.WritersArticle(dic).toJSON())
             get_article.append(combine_data)
 
-
-    return { "result" : "get ok","data" : get_article }
+    print(get_article)
+    return { "msg" : "SUCCESS","data" : get_article }
     
 
-
-
-
+@app.route('/describe-writer',methods = ['GET'])
+def get_describewriter():
+    id = request.args.get("id")
+    print(id)
+    datas = list(db.User.find({"userid":id}))[0]
+    
+    writers = datas["describewriter"]
+    
+    get_writer = []
+    
+    for writer in writers:
+        writerFromDb = list(db.User.find({"userid":writer}))
+        if len(writerFromDb) == 0:
+            continue
+        writerInfo = writerFromDb[0]
+        get_writer.append(json.loads(Data.User(writerInfo).toJSON()))
+    print(get_writer)
+    return { "msg" : "SUCCESS","data" : get_writer }
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',debug=True)
