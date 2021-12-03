@@ -110,6 +110,20 @@ def get_describewriter():
     print(get_writer)
     return { "msg" : "SUCCESS","data" : get_writer }
 
+@app.route('/recommend-writer',methods = ['GET'])
+def get_describewriter():
+    id = request.args.get("id")
+    datas = list(db.User.find({"userid":id}))[0]
+    
+    writers = datas["describewriter"]
+    
+    get_writer = list(db.User.find({"$and" :[{'userid':{'$nin':writers}},
+                                    {'usertype':'1'} ]})).limit(20)
+    
+    print(get_writer)
+    return { "msg" : "SUCCESS","data" : get_writer }
+
+
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',debug=True)
     
