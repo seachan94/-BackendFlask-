@@ -2,13 +2,13 @@ import json
 class User:
 
     def __init__(self,data):
-        self.id = data["userid"]
-        self.name = data["username"]
+        self.id = data["id"]
+        self.name = data["name"]
         self.nickname = data["nickname"]
-        self.introduceText = data["introducetext"]
-        self.Img = data["img"]
-        self.userType = data["usertype"]
-        self.describeWriter = data["describewriter"]
+        self.introduceText = data["introduceText"]
+        self.Img = data["Img"]
+        self.userType = data["userType"]
+        self.describeWriter = data["describeWriter"]
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 

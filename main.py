@@ -25,7 +25,7 @@ def set_user():
 def get_user():
     id = request.args.get("id")
     usertype = request.args.get("type")
-    datas = list(db.User.find({"userid":id}))
+    datas = list(db.User.find({"id":id}))
 
     dic = {}
     for key in datas[0]:
@@ -44,7 +44,7 @@ def get_user():
 def checkIsDuplicateId():
     
     id = request.args.get("id")
-    isDuplicate = len(list(db.User.find({"userid":id}))) != 0
+    isDuplicate = len(list(db.User.find({"id":id}))) != 0
 
     return str(isDuplicate)
 
@@ -60,15 +60,15 @@ def checkIsDuplicateNickName():
 @app.route('/articles',methods = ['GET'])
 def get_articles():
     id = request.args.get("id")
-    datas = list(db.User.find({"userid":id}))[0]
-    writers = datas["describewriter"]
+    datas = list(db.User.find({"id":id}))[0]
+    writers = datas["describeWriter"]
     get_article = []
 
     for writer in writers:
-        writerInfoFromDb = list(db.User.find({"userid":writer}))
+        writerInfoFromDb = list(db.User.find({"id":writer}))
         if len(writerInfoFromDb)== 0:
             continue
-        writerInfo = list(db.User.find({"userid":writer}))[0]
+        writerInfo = list(db.User.find({"id":writer}))[0]
         writerArticle = list(db.Articles.find({"userid":writer}))
         for data in writerArticle:
             article_dic = {}
@@ -79,7 +79,7 @@ def get_articles():
             article_dic["time"] = data["time"]
             
             dic = {}
-            dic['Img'] = writerInfo["img"]
+            dic['Img'] = writerInfo["Img"]
             dic['nickName'] = writerInfo["nickname"]
            
             dic['article'] = json.loads(Data.Article(article_dic).toJSON())
@@ -95,33 +95,37 @@ def get_articles():
 def get_describewriter():
     id = request.args.get("id")
     print(id)
-    datas = list(db.User.find({"userid":id}))[0]
+    datas = list(db.User.find({"id":id}))[0]
     
-    writers = datas["describewriter"]
+    writers = datas["describeWriter"]
     
     get_writer = []
     
     for writer in writers:
-        writerFromDb = list(db.User.find({"userid":writer}))
+        writerFromDb = list(db.User.find({"id":writer}))
         if len(writerFromDb) == 0:
             continue
         writerInfo = writerFromDb[0]
         get_writer.append(json.loads(Data.User(writerInfo).toJSON()))
-    print(get_writer)
+    print(type(get_writer))
     return { "msg" : "SUCCESS","data" : get_writer }
 
 @app.route('/recommend-writer',methods = ['GET'])
-def get_describewriter():
+def get_recommendwriter():
     id = request.args.get("id")
-    datas = list(db.User.find({"userid":id}))[0]
+    datas = list(db.User.find({"id":id}))[0]
     
-    writers = datas["describewriter"]
+    writers = datas["describeWriter"]
+    print(writers)
+    get_writers = list(db.User.find({"$and" :[ {'id':{'$nin':writers} },
+                                    {'userType':'1'} ]}).limit(20))
     
-    get_writer = list(db.User.find({"$and" :[{'userid':{'$nin':writers}},
-                                    {'usertype':'1'} ]})).limit(20)
-    
-    print(get_writer)
-    return { "msg" : "SUCCESS","data" : get_writer }
+    return_data = []
+    for writer in get_writers:
+        print(writer)
+        return_data.append(json.loads(Data.User(writer).toJSON()))
+
+    return { "msg" : "SUCCESS","data" : return_data }
 
 
 if __name__ == '__main__':
