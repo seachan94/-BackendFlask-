@@ -87,14 +87,12 @@ def get_articles():
             combine_data = json.loads(Data.WritersArticle(dic).toJSON())
             get_article.append(combine_data)
 
-    print(get_article)
     return { "msg" : "SUCCESS","data" : get_article }
     
 
 @app.route('/describe-writer',methods = ['GET'])
 def get_describewriter():
     id = request.args.get("id")
-    print(id)
     datas = list(db.User.find({"id":id}))[0]
     
     writers = datas["describeWriter"]
@@ -107,7 +105,7 @@ def get_describewriter():
             continue
         writerInfo = writerFromDb[0]
         get_writer.append(json.loads(Data.User(writerInfo).toJSON()))
-    print(type(get_writer))
+   
     return { "msg" : "SUCCESS","data" : get_writer }
 
 @app.route('/recommend-writer',methods = ['GET'])
@@ -116,17 +114,33 @@ def get_recommendwriter():
     datas = list(db.User.find({"id":id}))[0]
     
     writers = datas["describeWriter"]
-    print(writers)
     get_writers = list(db.User.find({"$and" :[ {'id':{'$nin':writers} },
                                     {'userType':'1'} ]}).limit(20))
     
     return_data = []
     for writer in get_writers:
-        print(writer)
         return_data.append(json.loads(Data.User(writer).toJSON()))
 
     return { "msg" : "SUCCESS","data" : return_data }
 
+
+@app.route('/introuduceText', methods= ['GET'])
+def change_introduceText():
+    id = request.args.get("id")
+    text = request.args.get("text")
+
+    db.User.update_one({"id":id},{"$set" : {"introduceText": text}})
+    
+    return {"msg":"SUCCESS"}
+
+@app.route('/Img', methods= ['GET'])
+def change_profileImg():
+    id = request.args.get("id")
+    img = request.args.get("img")
+
+    db.User.update_one({"id":id},{"$set" : {"Img": img}})
+    
+    return {"msg":"SUCCESS"}
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',debug=True)
