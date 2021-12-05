@@ -69,10 +69,10 @@ def get_articles():
         if len(writerInfoFromDb)== 0:
             continue
         writerInfo = list(db.User.find({"id":writer}))[0]
-        writerArticle = list(db.Articles.find({"userid":writer}))
+        writerArticle = list(db.Articles.find({"writerId":writer}))
         for data in writerArticle:
             article_dic = {}
-            article_dic["writerId"] = data["userid"]
+            article_dic["writerId"] = data["writerId"]
             article_dic["title"] = data["title"]
             article_dic["text"] = data['text']
             article_dic["date"] = data["date"]
@@ -141,6 +141,35 @@ def change_profileImg():
     db.User.update_one({"id":id},{"$set" : {"Img": img}})
     
     return {"msg":"SUCCESS"}
+
+@app.route('/get-article',methods = ['GET'])
+def getArticles():
+    id = request.args.get("id")
+
+
+    writerInfo = list(db.User.find({"id":id}))[0]
+    writerArticle = list(db.Articles.find({"writerId":id}))
+
+    get_articles = []
+    for data in writerArticle:
+        article_dic = {}
+        article_dic["writerId"] = data["writerId"]
+        article_dic["title"] = data["title"]
+        article_dic["text"] = data['text']
+        article_dic["date"] = data["date"]
+        article_dic["time"] = data["time"]
+        
+        dic = {}
+        dic['Img'] = writerInfo["Img"]
+        dic['nickName'] = writerInfo["nickname"]
+        
+        dic['article'] = json.loads(Data.Article(article_dic).toJSON())
+
+        combine_data = json.loads(Data.WritersArticle(dic).toJSON())
+        get_articles.append(combine_data)
+
+
+    return {"msg" : "SUCCESS" , "data" : get_articles}
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',debug=True)
