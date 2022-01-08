@@ -18,7 +18,7 @@ def set_user():
     #mongodb 
     db.User.insert_one(request_data)
     return {
-        "msg" : "success"
+        "msg" : "SUCCESS"
     }
 
 @app.route('/user',methods = ['GET'])
@@ -46,7 +46,11 @@ def checkIsDuplicateId():
     id = request.args.get("id")
     isDuplicate = len(list(db.User.find({"id":id}))) != 0
 
-    return str(isDuplicate)
+    result = ""
+    if not isDuplicate :
+        result = "SUCCESS"
+    
+    return {"msg" : result}
 
 @app.route('/user/duplicate/nickname', methods =['GET'])
 def checkIsDuplicateNickName():
@@ -54,7 +58,11 @@ def checkIsDuplicateNickName():
     nickname = request.args.get("nickname")
     isDuplicate = len(list(db.User.find({"nickname":nickname}))) != 0
 
-    return str(isDuplicate)
+    result = ""
+    if not isDuplicate :
+        result = "SUCCESS"
+    
+    return {"msg" : result}
 
 
 @app.route('/articles',methods = ['GET'])
@@ -86,6 +94,7 @@ def get_articles():
 
             combine_data = json.loads(Data.WritersArticle(dic).toJSON())
             get_article.append(combine_data)
+      
 
     return { "msg" : "SUCCESS","data" : get_article }
     
@@ -121,6 +130,7 @@ def get_recommendwriter():
     for writer in get_writers:
         return_data.append(json.loads(Data.User(writer).toJSON()))
 
+    print(return_data)
     return { "msg" : "SUCCESS","data" : return_data }
 
 
