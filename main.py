@@ -181,6 +181,18 @@ def getArticles():
 
     return {"msg" : "SUCCESS" , "data" : get_articles}
 
+
+@app.route("/article",methods = ["DELETE"])
+def deleterticle():
+
+    id = request.args.get("id")
+    text = request.args.get("text")
+    
+    db.Articles.delete_one({"text":text,'writerId':id})
+
+    return {"msg" : "SUCCESS"}
+
+
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',debug=True)
     
