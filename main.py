@@ -187,11 +187,28 @@ def deleterticle():
 
     id = request.args.get("id")
     text = request.args.get("text")
-    
     db.Articles.delete_one({"text":text,'writerId':id})
 
     return {"msg" : "SUCCESS"}
 
+@app.route("/update-article" ,methods = ["GET"])
+def updateArticle():
+
+    newText = request.args.get("text")
+    prevText = request.args.get("prevText")
+    query = {"text":prevText}
+    newValue = {"$set":{"text": newText}}
+    db.Articles.update_one(query,newValue)
+    return {"msg" : "SUCCESS"}
+
+
+@app.route("/insert-article",methods=["POST"])
+def insertArticle():
+    
+    article = request.json
+    db.Articles.insert(article)
+    print(article)
+    return {"msg":"SUCCESS"}
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',debug=True)
